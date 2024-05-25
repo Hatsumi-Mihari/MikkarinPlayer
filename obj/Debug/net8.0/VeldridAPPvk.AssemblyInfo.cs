@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VeldridAPPvk")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+82caf45890aeb03601df34a627a0a2702079fb2c")]
 [assembly: System.Reflection.AssemblyProductAttribute("VeldridAPPvk")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VeldridAPPvk")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

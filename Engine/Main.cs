@@ -19,48 +19,10 @@ namespace VeldridAPPvk.Engine
     internal class Main
     {
         private bool windowResized = false;
-        private static Matrix4x4 test = MatrixModel(new Vector3(1, 1, 1), new Vector3(0, 0, 0), new Vector3(90f, 0, 0));
-        private Vertex[] vertices =
-        {
-            new Vertex(new Vector3(275f, 275f,-1.0f), new Vector4(1.0f, 1.0f, 1.0f, 0.5f),
-                new Vector2(0.0f, 1.0f),
-                new Vector4(test.M11, test.M12, test.M13, test.M14),
-                new Vector4(test.M21, test.M22, test.M23, test.M24),
-                new Vector4(test.M31, test.M32, test.M33, test.M34),
-                new Vector4(test.M41, test.M42, test.M43, test.M44)),
+        private VertexMeneg vertexMeneg = new VertexMeneg();
+        private Vertex[] vertices;
 
-            new Vertex(new Vector3(275f, -275f, -1.0f), new Vector4(1.0f, 0.0f, 1.0f, 1.0f),
-                new Vector2(1.0f, 1.0f),
-                new Vector4(test.M11, test.M12, test.M13, test.M14),
-                new Vector4(test.M21, test.M22, test.M23, test.M24),
-                new Vector4(test.M31, test.M32, test.M33, test.M34),
-                new Vector4(test.M41, test.M42, test.M43, test.M44)),
-
-            new Vertex(new Vector3(-275f, -275f, -1.0f), new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                new Vector2(1.0f, 0.0f),
-                new Vector4(test.M11, test.M12, test.M13, test.M14),
-                new Vector4(test.M21, test.M22, test.M23, test.M24),
-                new Vector4(test.M31, test.M32, test.M33, test.M34),
-                new Vector4(test.M41, test.M42, test.M43, test.M44)),
-
-            new Vertex(new Vector3(-275f, 275f, -1.0f), new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                new Vector2(0.0f, 0.0f),
-                new Vector4(test.M11, test.M12, test.M13, test.M14),
-                new Vector4(test.M21, test.M22, test.M23, test.M24),
-                new Vector4(test.M31, test.M32, test.M33, test.M34),
-                new Vector4(test.M41, test.M42, test.M43, test.M44)),
-        };
-
-        private VertexLayoutDescription vertexLayout = new VertexLayoutDescription(
-            new VertexElementDescription("aTextureCoordinate", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2),
-            new VertexElementDescription("aPosition", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
-            new VertexElementDescription("aColor", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4),
-            new VertexElementDescription("aModelMlo", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4),
-            new VertexElementDescription("aModelMlt", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4),
-            new VertexElementDescription("aModelMlth", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4),
-            new VertexElementDescription("aModelMlf", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4));
-
-        ushort[] indices = new ushort[] { 0, 1, 2, 2, 3, 0 };
+        ushort[] indices ;
         List<string> shaderSource = new List<string>();
 
         private void readShaders(string[] source)
@@ -86,29 +48,7 @@ namespace VeldridAPPvk.Engine
             }
         }
 
-        public static Matrix4x4 MatrixModel(Vector3 Scale, Vector3 Rotations, Vector3 Translation, float Time = 0.0f, float AnimationsSeed = 0.0f)
-        {
-            Matrix4x4 rotationMatrixX;
-            Matrix4x4 rotationMatrixY;
-            Matrix4x4 rotationMatrixZ;
 
-            if (Time == 0.0f || AnimationsSeed == 0.0f)
-            {
-                rotationMatrixX = Matrix4x4.CreateRotationX(Rotations.X);
-                rotationMatrixY = Matrix4x4.CreateRotationY(Rotations.Y);
-                rotationMatrixZ = Matrix4x4.CreateRotationZ(Rotations.Z);
-            }
-            else
-            {
-                rotationMatrixX = Matrix4x4.CreateRotationX(Rotations.X * Time * AnimationsSeed);
-                rotationMatrixY = Matrix4x4.CreateRotationY(Rotations.Y * Time * AnimationsSeed);
-                rotationMatrixZ = Matrix4x4.CreateRotationZ(Rotations.Z * Time * AnimationsSeed);
-            }
-
-            Matrix4x4 modelMatrix = Matrix4x4.CreateScale(Scale) * (rotationMatrixX * rotationMatrixY * rotationMatrixZ) * Matrix4x4.CreateTranslation(Translation);
-
-            return modelMatrix;
-        }
 
         public unsafe void main()
         {
@@ -123,15 +63,37 @@ namespace VeldridAPPvk.Engine
             };
 
             Sdl2Window window = VeldridStartup.CreateWindow(ref windowCI);
+
             window.Resizable = true;
+
+            this.vertexMeneg.NewVertexSquare(new Square(
+                Width: 64,
+                Height: 64,
+                BagroundColor: new Vector4(1.0f, 0.0f, 1.0f, 1.0f),
+                Z_Index: 2,
+                Scale: new Vector3(1, 1, 1)
+            ));
+
+            this.vertexMeneg.NewVertexSquare(new Square(
+                Width: 128,
+                Height: 32,
+                BagroundColor: new Vector4(1.0f, 1.0f, 0.0f, 0.5f),
+                Z_Index: 1,
+                Scale: new Vector3(1, 1, 1)
+            ));
+            this.vertices = this.vertexMeneg.vertex.SelectMany(array => array).ToArray();
+            this.indices = this.vertexMeneg.indices.SelectMany(array => array).ToArray();
 
             GraphicsDeviceOptions options = new GraphicsDeviceOptions
             {
                 PreferStandardClipSpaceYDirection = true,
                 PreferDepthRangeZeroToOne = true,
+                SyncToVerticalBlank = true,
                 Debug = true
             };
             GraphicsDevice gd = VeldridStartup.CreateGraphicsDevice(window, options, GraphicsBackend.Vulkan);
+
+
 
             DeviceBuffer vertexBuffer = gd.ResourceFactory.CreateBuffer(new BufferDescription(
                 (uint)(vertices.Length * Unsafe.SizeOf<Vertex>()), BufferUsage.VertexBuffer));
@@ -206,7 +168,7 @@ namespace VeldridAPPvk.Engine
                     depthClipEnabled: true,
                     scissorTestEnabled: false),
                 PrimitiveTopology.TriangleList,
-                new ShaderSetDescription(new VertexLayoutDescription[] { vertexLayout }, shaders),
+                new ShaderSetDescription(new VertexLayoutDescription[] { this.vertexMeneg.GetLayoutVertex() }, shaders),
                 new ResourceLayout[] { resourceLayout },
                 gd.SwapchainFramebuffer.OutputDescription,
                 ResourceBindingModel.Improved);

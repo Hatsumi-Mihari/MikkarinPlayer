@@ -43,3 +43,4 @@ D:\VulkanAPI_Csharp\VeldridAPPvk\VeldridAPPvk\bin\Debug\net8.0\Microsoft.Win32.S
 D:\VulkanAPI_Csharp\VeldridAPPvk\VeldridAPPvk\bin\Debug\net8.0\StbImageSharp.dll
 D:\VulkanAPI_Csharp\VeldridAPPvk\VeldridAPPvk\bin\Debug\net8.0\System.Drawing.Common.dll
 D:\VulkanAPI_Csharp\VeldridAPPvk\VeldridAPPvk\bin\Debug\net8.0\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll
+D:\VulkanAPI_Csharp\VeldridAPPvk\VeldridAPPvk\obj\Debug\net8.0\VeldridAPPvk.sourcelink.json

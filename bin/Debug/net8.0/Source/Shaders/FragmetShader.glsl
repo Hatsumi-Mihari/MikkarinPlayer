@@ -9,6 +9,6 @@ layout(set = 0, binding = 1) uniform texture2D Texture;
 layout(set = 0, binding = 2) uniform sampler SamplerT;
 void main()
 {
-    //fragColor = vec4(vColor);
-    fragColor =  texture(sampler2D(Texture, SamplerT), fragTexCoord);
+    fragColor = vec4(vColor);
+    //fragColor =  texture(sampler2D(Texture, SamplerT), fragTexCoord);
 }
